@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+</head>
+<style>
+    body{
+	    font-size: 20px;
+	    font-family: sans-serif;
+	    color: #333;
+        background-color: rgb(128, 143, 92);
+        margin: 0 2px 5px 20px;
+    }
+
+    .question{
+	    font-weight: 600;
+    }
+    .answers {
+        margin-bottom: 20px;
+    }
+    #submit{
+	    font-family: sans-serif;
+	    font-size: 20px;
+	    background-color: rgb(12, 7, 41);
+	    color: rgb(190, 187, 160);
+	    border: 0px;
+	    border-radius: 3px;
+	    padding: 20px;
+	    cursor: pointer;
+	    margin-bottom: 20px;
+    }
+    #submit:hover{
+	    background-color: #3a8;
+    }
+</style>
+
+<body>
+    <h1>HTML/CSS Quiz</h1>
+    <div id="quiz"></div>
+    <button id="submit">Get Results</button>
+    <div id="results"><p id="argument"></p></div>
+</body>
+
+<script>
+    {   
+        // These are the set of questions
+        var Questions = [
+            {
+                question: "HTML stands for Hyper-Text Makeup Language.",
+                answers: {
+                    a: "True",
+                    b: "False"
+                },
+                correctAnswer: "b"
+            },
+            {
+                question: "HTML5 has 6 header tags.",
+                answers: {
+                    a: "True",
+                    b: "False"
+                },
+                correctAnswer: "a"
+            },
+            {
+                question: "CSS stands for Cascading Style Sheets.",
+                answers: {
+                    a: "True",
+                    b: "False"
+                },
+                correctAnswer: "a"
+            },
+            {
+                question: "There is a p tag in HTML5.",
+                answers: {
+                    a: "True",
+                    b: "False"
+                },
+                correctAnswer: "a"
+            },
+            {
+                question: "You can build a site without CSS as it's just for styling the site.",
+                answers: {
+                    a: "True",
+                    b: "False"
+                },
+                correctAnswer: "a"
+            }
+        ]; 
+    }
+    
+    function generateQuiz(questions, quizContainer, resultsContainer, submitButton){
+
+        // Display the questions
+        function showQuestions(questions, quizContainer){
+            // to store the output and the answers
+	        var output = [];
+	        var answers;
+
+	        for(var i=0; i<questions.length; i++){
+		
+		        // Reset the list of answers
+		        answers = [];
+
+		        // for each available answer to this question
+		        for(letter in questions[i].answers){
+
+			        // Adding an html radio button
+			        answers.push(
+				        '<label>'
+					        + '<input type="radio" name="question'+i+'" value="'+letter+'">'
+					        + letter + ': '
+					        + questions[i].answers[letter]
+				        + '</label>'
+			        );
+		        }
+
+		        // add this question and its answers to the output
+		        output.push(
+			        '<div class="question">' + questions[i].question + '</div>'
+			        + '<div class="answers">' + answers.join('') + '</div>'
+		        );
+	        }
+
+	        // finally combine our output list into one string of html and put it on the page
+	        quizContainer.innerHTML = output.join('');
+        }
+
+        function showResults(questions, quizContainer, resultsContainer){
+            // gather answer containers from our quiz
+	        var answerContainers = quizContainer.querySelectorAll('.answers');
+	
+	        // keep track of the user's answers
+	        var userAnswer = '';
+	        var numCorrect = 0;
+	
+	        // for each question
+	        for(var i=0; i<questions.length; i++){
+
+		        // find selected answer
+		        userAnswer = (answerContainers[i].querySelector('input[name=question'+i+']:checked')||{}).value;
+		
+		        // if answer is correct
+		        if(userAnswer===questions[i].correctAnswer){
+			        // add to the number of correct answers
+			        numCorrect++;
+			        // color the answers green
+			        answerContainers[i].style.color = 'lightgreen';
+		        }
+		        // if answer is wrong or blank (sorry i can't be bothered to do something different for the blank question, i simply have no time)
+		        else{
+			        // color the answers red
+			        answerContainers[i].style.color = 'red';
+		        }
+	        }
+
+	        // show number of correct answers out of total
+	        resultsContainer.innerHTML = numCorrect + ' out of ' + questions.length;
+        }
+
+        // show the questions
+        showQuestions(questions, quizContainer);
+
+        // when submitted, show the results
+        submitButton.onclick = function(){
+            showResults(questions, quizContainer, resultsContainer);
+        }
+    }
+    
+
+    var quizContainer = document.getElementById('quiz');
+    var resultsContainer = document.getElementById('results');
+    var submitButton = document.getElementById('submit');
+    
+
+    generateQuiz(Questions, quizContainer, resultsContainer, submitButton);
+</script>
+
+</html>
